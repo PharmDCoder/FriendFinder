@@ -19,17 +19,16 @@
 
     <div class="jumbotron">
       <h1 class="text-center">
-        <span class="fa fa-fire"></span> Survey Questions</h1>
+        <i class="fa fa-wpforms"></i> Survey Questions</h1>
       <hr>
       <div class="row">
         <div class="col-lg-12">
-          <!-- Reservation Page -->
           <div class="card">
             <div class="card-header">
               About You
             </div>
             <div class="card-body">
-              <form role="form">
+              <form id="survey-form" role="form">
                 <div class="form-group">
                   <label for="user-name">Name (Required)</label>
                   <input type="text" class="form-control" id="user-name">
@@ -48,6 +47,7 @@
                 <h5>Question 1</h2>
                   <label for="question-1">Your mind is always buzzing with unexplored ideas and plans.</label>
                   <select class="form-control" id="question-1">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -60,6 +60,7 @@
                   <label for="question-2">Generally speaking, you rely more on your experience than your
                     imagination.</label>
                   <select class="form-control" id="question-2">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -72,6 +73,7 @@
                   <label for="question-3">You find it easy to stay relaxed and focused even when there is some
                     pressure.</label>
                   <select class="form-control" id="question-3">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -83,6 +85,7 @@
                 <h5>Question 4</h2>
                   <label for="question-4">You rarely do something just out of sheer curiosity.</label>
                   <select class="form-control" id="question-4">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -94,6 +97,7 @@
                 <h5>Question 5</h2>
                   <label for="question-5">People can rarely upset you.</label>
                   <select class="form-control" id="question-5">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -105,6 +109,7 @@
                 <h5>Question 6</h2>
                   <label for="question-6">It is often difficult for you to relate to other people’s feelings.</label>
                   <select class="form-control" id="question-6">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -117,6 +122,7 @@
                   <label for="question-7">In a discussion, truth should be more important than people’s
                     sensitivities.</label>
                   <select class="form-control" id="question-7">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -128,6 +134,7 @@
                 <h5>Question 8</h2>
                   <label for="question-8">You rarely get carried away by fantasies and ideas.</label>
                   <select class="form-control" id="question-8">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -140,6 +147,7 @@
                   <label for="question-9">You think that everyone’s views should be respected regardless of whether they
                     are supported by facts or not.</label>
                   <select class="form-control" id="question-9">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -151,6 +159,7 @@
                 <h5>Question 10</h2>
                   <label for="question-10">You feel more energetic after spending time with a group of people.</label>
                   <select class="form-control" id="question-10">
+                    <option value="" selected disabled>Please select</option>
                     <option>1 (Strongly Agree)</option>
                     <option>2</option>
                     <option>3</option>
@@ -175,7 +184,7 @@
             </div>
             <div class="modal-body">
               <h5 id="match-name"></h5>
-              <img src="" id="match-image" alt="Match Image">
+              <img src="" id="match-image" alt="Match Image" class="img-fluid">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -198,14 +207,15 @@
 
 </html>
 
-<!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS SENT TO OUR SERVER -->
+<!-- BELOW CODE HANDLES HOW FORM DATA IS SENT TO OUR SERVER -->
 <script type="text/javascript">
   // In this code below we create the Front-end JavaScript which "POSTS" our form data to our express server.
   // In essence, when the user hits submit, jQuery grabs all of the fields then sends a post request to our api
-  // Our api recognizes the route (/api/tables)... and then runs the associated code (found in api-routes.js).
-  // In this case the associated code "saves" the data to the table-data.js file or waitinglist-data.js file
+  // Our api recognizes the route (/api/survey)... and then runs the associated code (found in api-routes.js).
+  // In this case the associated code "saves" the data to the friends.js file
 
   $(".submit").on("click", function (event) {
+    //prevents default action of refreshing the page when clicked 
     event.preventDefault();
 
     // Here we grab the form elements
@@ -216,11 +226,11 @@
       $("#question-5 :selected").text().substring(0, 1), $("#question-6 :selected").text().substring(0, 1), $("#question-7 :selected").text().substring(0, 1), $("#question-8 :selected").text().substring(0, 1),
       $("#question-9 :selected").text().substring(0, 1), $("#question-10 :selected").text().substring(0, 1)]
     }
+
+    // Here we call the friendMatch function to compare user results to hard-coded friend data
     friendMatch(newFriend);
-    // This line is the magic. It"s very similar to the standard ajax function we used.
-    // Essentially we give it a URL, we give it the object we want to send, then we have a "callback".
-    // The callback is the response of the server. In our case, we set up code in api-routes that "returns" true or false
-    // depending on if a tables is available or not.
+    
+    // The $.post method allows us to send the data (newFriend object) collected in the survey to the apiRoute.js file
 
     $.post("/api/results", newFriend,
       function (data) {
@@ -230,26 +240,35 @@
 
   });
 
+  //This function compares the newFriend object submitted in the survey to the hard coded friends' data to find the smallest absolute value (closest match)
   function friendMatch(newFriend) {
+    //uses the .get method to pull the hard coded friends data
     $.get("/api/results", function (data) {
+      //setting global variables for the current best match and match score
       var currentMatch;
+      //setting initial currentMatchScore to a value to prevent null
       var currentMatchScore = 50;
+      //loops through the hard coded friends data array
       data.forEach((potentialMatch) => {
+        //setting local variable to add up the scores of the friend currently being compared to newFriend object
         var matchTotal = 0;
+        //loop that loops through the scores of each current hard coded friend to the scores of the newFriend and finds absolute value of the difference to set to new match Total
         for (let index = 0; index < 10; index++) {
           matchTotal += Math.abs(potentialMatch.scores[index] - newFriend.scores[index]);
         }
         console.log("Match Total " + matchTotal);
         console.log("Match currentMatchScore " + currentMatchScore);
+        //if the current matchTotal is less than the currentMatchScore it will replace the current friend match with the most recently compared friend
         if (matchTotal < currentMatchScore) {
           currentMatchScore = matchTotal;
           currentMatch = potentialMatch;
           console.log("You have a new Match" + currentMatch.name);
         }
       });
+      //pushes the closest match name and image to the results modal
       $("#match-name").text(currentMatch.name);
-      $("#match-image").text(currentMatch.photo);
-    });
+      $("#match-image").attr("src", currentMatch.photo);
+      })
+    };
 
-  }
 </script>
